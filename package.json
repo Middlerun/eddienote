@@ -1,5 +1,5 @@
 {
-  "name": "enote",
+  "name": "eddienote",
   "version": "0.1.0",
   "private": true,
   "main": "src/electron-starter.js",
