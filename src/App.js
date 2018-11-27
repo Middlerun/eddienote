@@ -1,23 +1,46 @@
 import React, { Component } from 'react'
 
 import Sticky from './components/Sticky'
+import uuid from './lib/uuid'
+
+function newSticky() {
+  return {
+    id: uuid(),
+    content: '',
+    top: 10,
+    left: 10,
+    height: 100,
+    width: 200,
+  }
+}
 
 class App extends Component {
   constructor() {
     super()
 
     this.state = {
-      stickies: [
-        {
-          id: 1,
-          content: 'Hello world!',
-          top: 10,
-          left: 10,
-          height: 100,
-          width: 200,
-        },
-      ],
+      stickies: [newSticky()],
     }
+  }
+
+  componentDidMount() {
+    window.addEventListener('keypress', this.keyListen)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keypress', this.keyListen)
+  }
+
+  keyListen = (e) => {
+    if (e.ctrlKey && e.key == 'n') {
+      this.addSticky(newSticky())
+    }
+  }
+
+  addSticky(sticky) {
+    this.setState(state => ({
+        stickies: state.stickies.concat([sticky]),
+    }))
   }
 
   onStickyUpdate = (updatedDetails) => {
