@@ -13,7 +13,6 @@ function createWindow () {
     width: 800,
     height: 600,
     frame: false,
-    toolbar: false,
     transparent: true,
   })
 
@@ -37,7 +36,7 @@ function createWindow () {
   })
 }
 
-// app.disableHardwareAcceleration()
+app.disableHardwareAcceleration()
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
