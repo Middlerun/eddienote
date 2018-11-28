@@ -3,6 +3,11 @@ import React, { Component } from 'react'
 import Sticky from './components/Sticky'
 import uuid from './lib/uuid'
 
+const electron = window.require('electron')
+const store = electron.remote.getGlobal('store')
+
+const SAVE_DELAY = 3000
+
 function newSticky() {
   return {
     id: uuid(),
@@ -18,9 +23,10 @@ class App extends Component {
   constructor() {
     super()
 
-    this.state = {
-      stickies: [newSticky()],
-    }
+    const stickies = store.get('stickies', [newSticky()])
+
+    this.state = { stickies }
+    this.saveTimer = null
   }
 
   componentDidMount() {
@@ -31,6 +37,18 @@ class App extends Component {
     window.removeEventListener('keypress', this.keyListen)
   }
 
+  scheduleDataSave = () => {
+    if (this.saveTimer) {
+      clearTimeout(this.saveTimer)
+      this.saveTimer = null
+    }
+
+    this.saveTimer = setTimeout(() => {
+      store.set('stickies', this.state.stickies)
+      this.saveTimer = null
+    }, SAVE_DELAY)
+  }
+
   keyListen = (e) => {
     if (e.ctrlKey && e.key == 'n') {
       this.addSticky(newSticky())
@@ -39,8 +57,8 @@ class App extends Component {
 
   addSticky(sticky) {
     this.setState(state => ({
-        stickies: state.stickies.concat([sticky]),
-    }))
+      stickies: state.stickies.concat([sticky]),
+    }), this.scheduleDataSave)
   }
 
   onStickyUpdate = (updatedDetails) => {
@@ -56,7 +74,7 @@ class App extends Component {
           stickies: newStickies,
         }
       }
-    })
+    }, this.scheduleDataSave)
   }
 
   render() {
