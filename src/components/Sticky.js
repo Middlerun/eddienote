@@ -14,13 +14,34 @@ const Root = styled.div`
   border: 1px solid #cab773;
   display: flex;
   flex-direction: column;
+  color: rgba(0, 0, 0, .85);
 `
 
 const TopBar = styled.div`
   position: relative;
-  height: 10px;
+  height: 16px;
   background-color: #cab773;
   cursor: move;
+  user-select: none;
+  padding-left: 2px;
+  padding-right: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+`
+
+const TitleInput = styled.input.attrs({
+  'data-nodrag': true,
+  autoFocus: true,
+})`
+  display: block;
+  height: 16px;
+  background-color: transparent;
+  border: 1px dashed black;
+  outline: 0;
 `
 
 const Main = styled.div`
@@ -44,19 +65,19 @@ const TextArea = styled.textarea`
   border: 0;
   outline: 0;
   display: block;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: inherit;
+  font-size: 14px;
+  color: inherit;
 `
 
 const CloseButton = styled.button.attrs({
-  'data-button': true,
+  'data-nodrag': true,
 })`
   position: absolute;
   top: 0;
   right: 0;
-  height: 10px;
-  width: 10px;
+  height: 16px;
+  width: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +87,7 @@ const CloseButton = styled.button.attrs({
   opacity: .5;
   padding: -5px;
   background-image: url(${closeIcon});
-  background-position: top;
+  background-position: center;
   background-repeat: no-repeat;
   
   :hover {
@@ -79,6 +100,7 @@ class Sticky extends Component {
     super(props)
 
     this.state = {
+      editingTitle: false,
       dragging: false,
       resizing: false,
       dragStart: {},
@@ -97,7 +119,7 @@ class Sticky extends Component {
   }
 
   dragStart = (e) => {
-    const clickedWindowButton = !!e.target.dataset.button
+    const clickedWindowButton = !!e.target.dataset.nodrag
     if (this.state.dragging || e.button !== LEFT_MOUSE_BUTTON || clickedWindowButton) {
       return
     }
@@ -183,9 +205,24 @@ class Sticky extends Component {
     }
   }
 
+  startEditTitle = () => {
+    this.setState({ editingTitle: true })
+  }
+
+  finishEditTitle = () => {
+    this.setState({ editingTitle: false })
+  }
+
+  onTitleChange = (e) => {
+    this.updateDetails({
+      title: e.target.value,
+    })
+  }
+
   render() {
     const {
       details: {
+        title,
         content,
         top,
         left,
@@ -193,14 +230,20 @@ class Sticky extends Component {
         width
       },
     } = this.props
+    const {
+      editingTitle,
+    } = this.state
 
     const geometry = { top, left, height, width }
 
-    const textAreaHeight = height - 12 // 10px top bar + 2px of borders
+    const textAreaHeight = height - 18 // 16px top bar + 2px of borders
 
     return (
       <Root style={geometry}>
-        <TopBar onMouseDown={this.dragStart}>
+        <TopBar onMouseDown={this.dragStart} onDoubleClick={this.startEditTitle}>
+          {editingTitle
+            ? <TitleInput value={title} onChange={this.onTitleChange} onBlur={this.finishEditTitle}/>
+            : title}
           <CloseButton onClick={this.onCloseClick}/>
         </TopBar>
         <Main>

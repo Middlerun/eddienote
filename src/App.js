@@ -11,6 +11,7 @@ const SAVE_DELAY = 3000
 function newSticky() {
   return {
     id: uuid(),
+    title: '',
     content: '',
     top: 10,
     left: 10,
@@ -35,6 +36,11 @@ class App extends Component {
 
   componentWillUnmount() {
     window.removeEventListener('keypress', this.keyListen)
+
+    if (this.saveTimer) {
+      clearTimeout(this.saveTimer)
+      this.saveData()
+    }
   }
 
   scheduleDataSave = () => {
@@ -43,10 +49,12 @@ class App extends Component {
       this.saveTimer = null
     }
 
-    this.saveTimer = setTimeout(() => {
-      store.set('stickies', this.state.stickies)
-      this.saveTimer = null
-    }, SAVE_DELAY)
+    this.saveTimer = setTimeout(this.saveData, SAVE_DELAY)
+  }
+
+  saveData = () => {
+    store.set('stickies', this.state.stickies)
+    this.saveTimer = null
   }
 
   keyListen = (e) => {

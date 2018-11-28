@@ -6,6 +6,12 @@ Currently under development.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Keyboard shortcuts
+
+- `Super+Space`: Show and hide stickies
+- `Ctrl+N`: New note
+- `Ctrl+Q`: Quit app
+
 ## Available Scripts
 
 In the project directory, you can run:
