@@ -20,6 +20,7 @@ function createWindow() {
     frame: false,
     transparent: true,
     fullscreen: true,
+    skipTaskbar: true,
     icon: iconPath,
   })
 
@@ -42,19 +43,16 @@ function createWindow() {
 
 function createTray() {
   tray = new Tray(iconPath)
-  tray.setToolTip('Enote')
+  tray.setToolTip('Eddie Note')
   var contextMenu = Menu.buildFromTemplate([
     { label: 'Quit',
       accelerator: 'Command+Q',
       selector: 'terminate:',
       click: () => app.quit()
     },
-  ]);
-  tray.setToolTip('Eddie\'s sticky note app');
-  tray.setContextMenu(contextMenu);
-  tray.on('click', () => {
-    toggleVisible()
-  })
+  ])
+  tray.setContextMenu(contextMenu)
+  tray.on('click', toggleVisible)
 }
 
 function toggleVisible() {
@@ -62,6 +60,7 @@ function toggleVisible() {
     mainWindow.hide()
   } else {
     mainWindow.show()
+    mainWindow.setSkipTaskbar(true)
   }
 }
 
@@ -74,9 +73,7 @@ app.on('ready', () => setTimeout(() => {
   createWindow()
   createTray()
 
-  globalShortcut.register('Super+Space', () => {
-    toggleVisible()
-  })
+  globalShortcut.register('Super+Space', toggleVisible)
 }, 100))
 
 // Quit when all windows are closed.

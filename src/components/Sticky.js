@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 
 import resizeHandle from '../img/resize-handle.png'
+import closeIcon from '../img/close.png'
 
 const LEFT_MOUSE_BUTTON = 0
 const DEFAULT_MIN_WIDTH = 200
@@ -16,6 +17,7 @@ const Root = styled.div`
 `
 
 const TopBar = styled.div`
+  position: relative;
   height: 10px;
   background-color: #cab773;
   cursor: move;
@@ -47,6 +49,31 @@ const TextArea = styled.textarea`
     sans-serif;
 `
 
+const CloseButton = styled.button.attrs({
+  'data-button': true,
+})`
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 10px;
+  width: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  opacity: .5;
+  padding: -5px;
+  background-image: url(${closeIcon});
+  background-position: top;
+  background-repeat: no-repeat;
+  
+  :hover {
+    opacity: 1;
+  }
+`
+
 class Sticky extends Component {
   constructor(props) {
     super(props)
@@ -74,6 +101,7 @@ class Sticky extends Component {
     if (this.state.dragging || e.button !== LEFT_MOUSE_BUTTON || clickedWindowButton) {
       return
     }
+    e.preventDefault()
 
     const mouseCoords = { x: e.screenX, y: e.screenY }
     this.setState({
@@ -149,6 +177,12 @@ class Sticky extends Component {
     window.removeEventListener('mouseup', this.onResizeEnd)
   }
 
+  onCloseClick = () => {
+    if (window.confirm('Delete sticky? This can\'t be undone!')) {
+      this.props.onRequestClose(this.props.details.id)
+    }
+  }
+
   render() {
     const {
       details: {
@@ -166,7 +200,9 @@ class Sticky extends Component {
 
     return (
       <Root style={geometry}>
-        <TopBar onMouseDown={this.dragStart}/>
+        <TopBar onMouseDown={this.dragStart}>
+          <CloseButton onClick={this.onCloseClick}/>
+        </TopBar>
         <Main>
           <TextArea
             value={content}

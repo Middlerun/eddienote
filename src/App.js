@@ -77,6 +77,21 @@ class App extends Component {
     }, this.scheduleDataSave)
   }
 
+  onStickyRequestClose = (id) => {
+    this.setState(state => {
+      const index = state.stickies.findIndex(sticky => sticky.id == id)
+      if (index === -1) {
+        return null
+      } else {
+        const newStickies = state.stickies.slice(0, index)
+          .concat(state.stickies.slice(index + 1))
+        return {
+          stickies: newStickies,
+        }
+      }
+    }, this.scheduleDataSave)
+  }
+
   render() {
     const { stickies } = this.state
 
@@ -87,6 +102,7 @@ class App extends Component {
             key={sticky.id}
             details={sticky}
             onUpdate={this.onStickyUpdate}
+            onRequestClose={this.onStickyRequestClose}
           />
         ))}
       </div>
