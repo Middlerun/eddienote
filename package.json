@@ -1,10 +1,16 @@
 {
   "name": "eddienote",
   "version": "0.1.0",
+  "description": "An Electron-based desktop sticky notes app",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/Middlerun/eddienote.git"
+  },
   "private": true,
   "main": "electron-starter.js",
   "homepage": "./",
   "dependencies": {
+    "deep-equal": "^1.0.1",
     "electron": "^2.0.14",
     "electron-store": "^2.0.0",
     "react": "^16.6.3",

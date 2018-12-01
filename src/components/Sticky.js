@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
+import deepEqual from 'deep-equal'
 
 import resizeHandle from '../img/resize-handle.png'
 import closeIcon from '../img/close.png'
@@ -23,8 +24,7 @@ const TopBar = styled.div`
   background-color: #cab773;
   cursor: move;
   user-select: none;
-  padding-left: 2px;
-  padding-right: 16px;
+  padding-right: 17px;
   font-size: 12px;
   font-weight: bold;
   line-height: 16px;
@@ -33,12 +33,18 @@ const TopBar = styled.div`
   text-overflow: ellipsis;
 `
 
+const Title = styled.div`
+  padding-left: 2px;
+`
+
 const TitleInput = styled.input.attrs({
   'data-nodrag': true,
   autoFocus: true,
 })`
   display: block;
+  width: 100%;
   height: 16px;
+  padding-left: 2px;
   background-color: transparent;
   border: 1px dashed black;
   outline: 0;
@@ -105,6 +111,10 @@ class Sticky extends Component {
       resizing: false,
       dragStart: {},
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return (!deepEqual(this.props, nextProps) || !deepEqual(this.state, nextState))
   }
 
   updateContent = (e) => {
@@ -219,6 +229,12 @@ class Sticky extends Component {
     })
   }
 
+  onTitleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.finishEditTitle()
+    }
+  }
+
   render() {
     const {
       details: {
@@ -227,7 +243,7 @@ class Sticky extends Component {
         top,
         left,
         height,
-        width
+        width,
       },
     } = this.props
     const {
@@ -241,9 +257,15 @@ class Sticky extends Component {
     return (
       <Root style={geometry}>
         <TopBar onMouseDown={this.dragStart} onDoubleClick={this.startEditTitle}>
-          {editingTitle
-            ? <TitleInput value={title} onChange={this.onTitleChange} onBlur={this.finishEditTitle}/>
-            : title}
+          {editingTitle ?
+            <TitleInput
+              value={title}
+              onChange={this.onTitleChange}
+              onBlur={this.finishEditTitle}
+              onKeyPress={this.onTitleKeyPress}
+            /> :
+            <Title>{title}</Title>
+          }
           <CloseButton onClick={this.onCloseClick}/>
         </TopBar>
         <Main>

@@ -58,7 +58,7 @@ class App extends Component {
   }
 
   keyListen = (e) => {
-    if (e.ctrlKey && e.key == 'n') {
+    if (e.ctrlKey && e.key === 'n') {
       this.addSticky(newSticky())
     }
   }
@@ -71,7 +71,7 @@ class App extends Component {
 
   onStickyUpdate = (updatedDetails) => {
     this.setState(state => {
-      const index = state.stickies.findIndex(sticky => sticky.id == updatedDetails.id)
+      const index = state.stickies.findIndex(sticky => sticky.id === updatedDetails.id)
       if (index === -1) {
         return null
       } else {
@@ -87,7 +87,7 @@ class App extends Component {
 
   onStickyRequestClose = (id) => {
     this.setState(state => {
-      const index = state.stickies.findIndex(sticky => sticky.id == id)
+      const index = state.stickies.findIndex(sticky => sticky.id === id)
       if (index === -1) {
         return null
       } else {
