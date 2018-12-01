@@ -10,7 +10,7 @@ global.store = new Store({name: 'data'})
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let tray
-const iconPath = path.join(__dirname, '/src/icon.png')
+const iconPath = path.join(__dirname, '/icon.png')
 
 function createWindow() {
   // Create the browser window.

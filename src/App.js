@@ -20,11 +20,22 @@ function newSticky() {
   }
 }
 
+function defaultSticky() {
+  const sticky = newSticky()
+  sticky.content = `Welcome to Eddie Note!
+Hide and show notes with Windows key + Spacebar.
+Add a new note with Ctrl + N.
+To quit the app use the icon in the system tray.`
+  sticky.width = 400
+  sticky.height = 200
+  return sticky
+}
+
 class App extends Component {
   constructor() {
     super()
 
-    const stickies = store.get('stickies', [newSticky()])
+    const stickies = store.get('stickies', [defaultSticky()])
 
     this.state = { stickies }
     this.saveTimer = null
