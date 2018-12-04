@@ -46,7 +46,7 @@ function createTray() {
   tray.setToolTip('Eddie Note')
   var contextMenu = Menu.buildFromTemplate([
     { label: 'Quit',
-      accelerator: 'Command+Q',
+      accelerator: 'CommandOrControl+Q',
       selector: 'terminate:',
       click: () => app.quit()
     },
